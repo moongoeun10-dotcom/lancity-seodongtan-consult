@@ -73,6 +73,40 @@ dialog.addEventListener('click', event => {
 const galleryDialog = document.querySelector('#gallery-dialog');
 const galleryDialogImage = document.querySelector('#gallery-dialog-image');
 const galleryDialogCaption = document.querySelector('#gallery-dialog-caption');
+document.querySelectorAll('[data-carousel]').forEach(carousel => {
+  const trackElement = carousel.querySelector('.type-gallery-grid');
+  const slides = [...trackElement.querySelectorAll('figure')];
+  const counter = carousel.querySelector('.gallery-counter');
+  let current = 0;
+
+  const update = index => {
+    current = (index + slides.length) % slides.length;
+    counter.textContent = `${current + 1} / ${slides.length}`;
+  };
+  const move = index => {
+    const next = (index + slides.length) % slides.length;
+    trackElement.scrollTo({left: slides[next].offsetLeft, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
+    update(next);
+    track('gallery_slide_view', {photo: slides[next].querySelector('img').alt});
+  };
+
+  carousel.querySelector('.gallery-prev').addEventListener('click', () => move(current - 1));
+  carousel.querySelector('.gallery-next').addEventListener('click', () => move(current + 1));
+  trackElement.addEventListener('keydown', event => {
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    event.preventDefault();
+    move(current + (event.key === 'ArrowRight' ? 1 : -1));
+  });
+  let scrollFrame;
+  trackElement.addEventListener('scroll', () => {
+    cancelAnimationFrame(scrollFrame);
+    scrollFrame = requestAnimationFrame(() => {
+      const nearest = slides.reduce((best, slide, index) => Math.abs(slide.offsetLeft - trackElement.scrollLeft) < Math.abs(slides[best].offsetLeft - trackElement.scrollLeft) ? index : best, 0);
+      update(nearest);
+    });
+  }, {passive: true});
+  update(0);
+});
 document.querySelectorAll('.type-gallery-grid img').forEach(image => {
   image.tabIndex = 0;
   image.setAttribute('role', 'button');
