@@ -1,4 +1,3 @@
 User-agent: *
 Allow: /
-
-Sitemap: https://moongoeun10-dotcom.github.io/lancity-seodongtan-consult/sitemap.xml
+Sitemap: https://seodongtan-lancity.pages.dev/sitemap.xml
