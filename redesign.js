@@ -134,6 +134,7 @@ galleryDialog.addEventListener('click', event => {
 
 document.querySelectorAll('.track-apply').forEach(link => link.addEventListener('click', () => track('online_consult_section_click')));
 document.querySelectorAll('.track-form').forEach(link => link.addEventListener('click', () => track('consult_form_open')));
+document.querySelector('.consult-embed')?.addEventListener('load', () => track('consult_form_embed_view'));
 document.querySelectorAll('.track-map').forEach(link => link.addEventListener('click', () => track('map_open')));
 document.querySelectorAll('.track-video-external').forEach(link => link.addEventListener('click', () => track('youtube_shorts_external')));
 
